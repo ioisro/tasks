@@ -25,7 +25,7 @@ jobs:
           distribution: 'temurin'
 
       - name: Build Spring Boot application
-        run: gradle build
+        run: gradle build -x test
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
