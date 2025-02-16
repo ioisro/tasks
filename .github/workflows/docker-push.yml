@@ -1,0 +1,37 @@
+name: Docker Push
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+        with:
+          driver-opts: image=moby/buildkit:v0.11.1-rootless
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          registry: docker.io  # Or your registry URL
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          file: ./Dockerfile # Path to your Dockerfile
+          push: true
+          tags: ioisro/talknotes-tasks:latest # Replace with your details
