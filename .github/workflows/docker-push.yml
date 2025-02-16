@@ -16,6 +16,15 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: Set up JDK 21
+        uses: actions/setup-java@v3
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      - name: Build Spring Boot application
+        run: ./gradlew build -x test
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
         with:
@@ -24,7 +33,7 @@ jobs:
       - name: Login to Docker Hub
         uses: docker/login-action@v2
         with:
-          registry: docker.io  # Or your registry URL
+          registry: docker.io
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
@@ -32,6 +41,6 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           context: .
-          file: ./Dockerfile # Path to your Dockerfile
+          file: ./Dockerfile
           push: true
-          tags: ioisro/talknotes-tasks:latest # Replace with your details
+          tags: ioisro/talknotes-tasks:latest
